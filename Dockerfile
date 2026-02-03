@@ -8,10 +8,14 @@ ENV PYTHONUNBUFFERED True
 # Copy local code to the container image.
 ENV APP_HOME /app
 WORKDIR $APP_HOME
-COPY . ./
 
 # Install production dependencies.
+# Copy requirements.txt first to leverage Docker cache
+COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application code
+COPY . ./
 
 # Service must listen to $PORT environment variable.
 # This default value facilitates local development.
